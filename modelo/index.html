@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modelo Predictivo Spam o Ham</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <style>
+        #inputText {
+            width: 60%;
+            height: 200px;
+        }
+        #predictButton {
+            display: block; /* Botón bloque, para que aparezca debajo del campo de texto */
+            margin-top: 10px;
+        }
+        #predictionResult {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        async function runModel() {
+            console.log("Cargando modelo...");
+            const model = await tf.loadLayersModel('model.json');
+            console.log("Modelo cargado");
+
+            // Función para realizar predicciones
+            function predictSpam(caracteristicas) {
+                const inputData = tf.tensor2d(caracteristicas, [1, caracteristicas.length]);
+                const prediction = model.predict(inputData);
+                return prediction.dataSync()[0];
+            }
+
+            // Función para manejar el clic del botón
+            function handlePrediction() {
+				document.getElementById('predictionResult').innerText = 'Calculando...';
+				const inputText = document.getElementById('inputText').value;
+				const caracteristicas = calculaCaracteristicas(inputText);
+				const prediction = predictSpam(caracteristicas);
+
+				// Mostrar el resultado según la predicción
+				let resultMessage;
+				if (prediction < 0.5) {
+					resultMessage = 'No es spam';
+				} else {
+					resultMessage = 'Es spam';
+				}
+				document.getElementById('predictionResult').innerText = 'Prediccion: ' + resultMessage + ': ' + prediction;
+			}
+
+            // Asignar la función handlePrediction al evento click del botón
+            document.getElementById('predictButton').addEventListener('click', handlePrediction);
+        }
+
+        // Funciones para calcular las características del texto
+        function calculaCaracteristicas(text) {
+            const wordFreqMake = calcularFrecuenciaPalabra(text, 'make');
+            const wordFreqAddress = calcularFrecuenciaPalabra(text, 'address');
+            const wordFreqAll = calcularFrecuenciaPalabra(text, 'all');
+            const wordFreq3d = calcularFrecuenciaPalabra(text, '3d');
+            const wordFreqOur = calcularFrecuenciaPalabra(text, 'our');
+            const wordFreqOver = calcularFrecuenciaPalabra(text, 'over');
+            const wordFreqRemove = calcularFrecuenciaPalabra(text, 'remove');
+            const wordFreqInternet = calcularFrecuenciaPalabra(text, 'internet');
+            const wordFreqOrder = calcularFrecuenciaPalabra(text, 'order');
+            const wordFreqMail = calcularFrecuenciaPalabra(text, 'mail');
+            const wordFreqReceive = calcularFrecuenciaPalabra(text, 'receive');
+            const wordFreqWill = calcularFrecuenciaPalabra(text, 'will');
+            const wordFreqPeople = calcularFrecuenciaPalabra(text, 'people');
+            const wordFreqReport = calcularFrecuenciaPalabra(text, 'report');
+            const wordFreqAddresses = calcularFrecuenciaPalabra(text, 'addresses');
+            const wordFreqFree = calcularFrecuenciaPalabra(text, 'free');
+            const wordFreqBusiness = calcularFrecuenciaPalabra(text, 'business');
+            const wordFreqEmail = calcularFrecuenciaPalabra(text, 'email');
+            const wordFreqYou = calcularFrecuenciaPalabra(text, 'you');
+            const wordFreqCredit = calcularFrecuenciaPalabra(text, 'credit');
+            const wordFreqYour = calcularFrecuenciaPalabra(text, 'your');
+            const wordFreqFont = calcularFrecuenciaPalabra(text, 'font');
+            const wordFreq000 = calcularFrecuenciaPalabra(text, '000');
+            const wordFreqMoney = calcularFrecuenciaPalabra(text, 'money');
+            const wordFreqHP = calcularFrecuenciaPalabra(text, 'hp');
+            const wordFreqHPL = calcularFrecuenciaPalabra(text, 'hpl');
+            const wordFreqGeorge = calcularFrecuenciaPalabra(text, 'george');
+            const wordFreq650 = calcularFrecuenciaPalabra(text, '650');
+            const wordFreqLab = calcularFrecuenciaPalabra(text, 'lab');
+            const wordFreqLabs = calcularFrecuenciaPalabra(text, 'labs');
+            const wordFreqTelnet = calcularFrecuenciaPalabra(text, 'telnet');
+            const wordFreq857 = calcularFrecuenciaPalabra(text, '857');
+            const wordFreqData = calcularFrecuenciaPalabra(text, 'data');
+            const wordFreq415 = calcularFrecuenciaPalabra(text, '415');
+            const wordFreq85 = calcularFrecuenciaPalabra(text, '85');
+            const wordFreqTechnology = calcularFrecuenciaPalabra(text, 'technology');
+            const wordFreq1999 = calcularFrecuenciaPalabra(text, '1999');
+            const wordFreqParts = calcularFrecuenciaPalabra(text, 'parts');
+            const wordFreqPM = calcularFrecuenciaPalabra(text, 'pm');
+            const wordFreqDirect = calcularFrecuenciaPalabra(text, 'direct');
+            const wordFreqCS = calcularFrecuenciaPalabra(text, 'cs');
+            const wordFreqMeeting = calcularFrecuenciaPalabra(text, 'meeting');
+            const wordFreqOriginal = calcularFrecuenciaPalabra(text, 'original');
+            const wordFreqProject = calcularFrecuenciaPalabra(text, 'project');
+            const wordFreqRe = calcularFrecuenciaPalabra(text, 're');
+            const wordFreqEdu = calcularFrecuenciaPalabra(text, 'edu');
+            const wordFreqTable = calcularFrecuenciaPalabra(text, 'table');
+            const wordFreqConference = calcularFrecuenciaPalabra(text, 'conference');
+            const charFreqSemicolon = calcularFrecuenciaCaracter(text, ';');
+            const charFreqLeftParen = calcularFrecuenciaCaracter(text, '(');
+            const charFreqLeftBracket = calcularFrecuenciaCaracter(text, '[');
+            const charFreqExclamation = calcularFrecuenciaCaracter(text, '!');
+            const charFreqDollar = calcularFrecuenciaCaracter(text, '$');
+            const charFreqPound = calcularFrecuenciaCaracter(text, '#');
+            const capitalRunLengthAverage = longitudPromedioDeSecuencias(text);
+            const capitalRunLengthLongest = longitudDeLaSecuenciaMasLarga(text);
+            const capitalRunLengthTotal = numeroTotalDeLetrasMayusculas(text);
+
+            // Retorna un array con todas las características calculadas
+            return [
+                wordFreqMake, wordFreqAddress, wordFreqAll, wordFreq3d, wordFreqOur,
+                wordFreqOver, wordFreqRemove, wordFreqInternet, wordFreqOrder, wordFreqMail,
+                wordFreqReceive, wordFreqWill, wordFreqPeople, wordFreqReport, wordFreqAddresses,
+                wordFreqFree, wordFreqBusiness, wordFreqEmail, wordFreqYou, wordFreqCredit,
+                wordFreqYour, wordFreqFont, wordFreq000, wordFreqMoney, wordFreqHP, wordFreqHPL,
+                wordFreqGeorge, wordFreq650, wordFreqLab, wordFreqLabs, wordFreqTelnet, wordFreq857,
+                wordFreqData, wordFreq415, wordFreq85, wordFreqTechnology, wordFreq1999, wordFreqParts,
+                wordFreqPM, wordFreqDirect, wordFreqCS, wordFreqMeeting, wordFreqOriginal, wordFreqProject,
+                wordFreqRe, wordFreqEdu, wordFreqTable, wordFreqConference, charFreqSemicolon,
+                charFreqLeftParen, charFreqLeftBracket, charFreqExclamation, charFreqDollar, charFreqPound,
+                capitalRunLengthAverage, capitalRunLengthLongest, capitalRunLengthTotal
+            ];
+        }
+
+        // Función para calcular la frecuencia de una palabra en un texto
+        function calcularFrecuenciaPalabra(texto, palabra) {
+            const palabras = texto.split(/\s+/);
+            const frecuencia = (palabras.filter(pal => pal.toLowerCase() === palabra.toLowerCase()).length / palabras.length) * 100;
+            return frecuencia || 0;
+        }
+
+        // Función para calcular la frecuencia de un carácter en un texto
+        function calcularFrecuenciaCaracter(texto, caracter) {
+            const frecuencia = (texto.split(caracter).length - 1) / texto.length * 100;
+            return frecuencia || 0;
+        }
+
+        // Función para calcular la longitud promedio de las secuencias de letras mayúsculas en un texto
+        function longitudPromedioDeSecuencias(texto) {
+            const matches = texto.match(/[A-Z]+/g);
+            const promedio = matches ? matches.reduce((acc, val) => acc + val.length, 0) / matches.length : 0;
+            return promedio || 0;
+        }
+
+        // Función para calcular la longitud de la secuencia más larga de letras mayúsculas en un texto
+        function longitudDeLaSecuenciaMasLarga(texto) {
+            const matches = texto.match(/[A-Z]+/g);
+            const maxLongitud = matches ? Math.max(...matches.map(s => s.length)) : 0;
+            return maxLongitud || 0;
+        }
+
+        // Función para calcular el número total de letras mayúsculas en un texto
+        function numeroTotalDeLetrasMayusculas(texto) {
+            const matches = texto.match(/[A-Z]/g);
+            return matches ? matches.length : 0;
+        }
+
+        runModel();
+    </script>
+</head>
+<body>
+    <textarea id="inputText" placeholder="Introduce el texto"></textarea>
+    <button id="predictButton">Predecir</button>
+    <div id="predictionResult"></div>
+</body>
+</html>
